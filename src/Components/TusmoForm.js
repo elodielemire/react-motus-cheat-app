@@ -1,33 +1,40 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import wordList from '../wordList.json';
 
-export default function TusmoForm (){
+export default function TusmoForm() {
     const [words, setWords] = useState(wordList.words);
     const [requiredWordLength, setRequiredWordLength] = useState('');
     const [firstLetters, setFirstLetters] = useState('');
     const [lettersToContain, setLettersToContain] = useState('');
     const [lettersToExclude, setLettersToExclude] = useState('');
-    const [noResult, setNoResult] = useState(false);
     const [showList, setShowList] = useState(false);
 
-    const submitWord = e => {
-        e.preventDefault();
+    useEffect(() => {
+        hasAtLeastOneFieldFilled() && submitWord();
+    }, [requiredWordLength, firstLetters, lettersToContain, lettersToExclude]);
 
-        const filteredWords = words.filter(word => {
-            let unaccentWord = unaccent(word);
-            const isSameLength = unaccentWord.length === requiredWordLength;
-            return isSameLength
-                && hasSameFirstLetters(unaccentWord)
-                && containsLetters(unaccentWord)
-                && doesNotcontainLetters(unaccentWord);
+    const submitWord = () => {
+        const filteredWords = words.filter(wordWithAccents => {
+            let word = unaccent(wordWithAccents);
+            let array = [];
+            if (requiredWordLength) {
+                array.push(isSameLength(word));
+            }
+            if (firstLetters) {
+                array.push(hasSameFirstLetters(word));
+            }
+            if (lettersToExclude) {
+                array.push(doesNotcontainLetters(word));
+            }
+            if (lettersToContain) {
+                array.push(containsLetters(word));
+            }
+
+            return array.every(elem => elem === true);
         });
 
-        if (filteredWords.length === 0) {
-            setNoResult(true);
-        } else {
-            setShowList(true);
-            setWords(filteredWords);
-        }
+        setShowList(true);
+        setWords(filteredWords);
     }
 
     const resetForm = () => {
@@ -36,13 +43,18 @@ export default function TusmoForm (){
         setFirstLetters('');
         setLettersToContain('');
         setLettersToExclude('');
-        setNoResult(false);
         setShowList(false);
     }
 
+    const hasAtLeastOneFieldFilled = () => {
+        return requiredWordLength || firstLetters || lettersToExclude || lettersToContain;
+    }
+
+    const isSameLength = word => word.length === requiredWordLength;
+
     const doesNotcontainLetters = word => {
         let array = [];
-        for(let i=0; i<lettersToExclude.length; i++) {
+        for (let i = 0; i < lettersToExclude.length; i++) {
             array.push(word.includes(lettersToExclude.charAt(i)));
         }
         return array.every(elem => elem === false);
@@ -50,7 +62,7 @@ export default function TusmoForm (){
 
     const containsLetters = word => {
         let array = [];
-        for(let i=0; i<lettersToContain.length; i++) {
+        for (let i = 0; i < lettersToContain.length; i++) {
             array.push(word.includes(lettersToContain.charAt(i)));
         }
         return array.every(elem => elem === true);
@@ -58,7 +70,7 @@ export default function TusmoForm (){
 
     const hasSameFirstLetters = word => {
         let array = [];
-        for(let i=0; i<firstLetters.length; i++) {
+        for (let i = 0; i < firstLetters.length; i++) {
             array.push(word.charAt(i).toLowerCase() === firstLetters.charAt(i).toLowerCase());
         }
         return array.every(elem => elem === true);
@@ -105,7 +117,7 @@ export default function TusmoForm (){
 
     return (
         <div className="m-auto px-4 col-sm-6 col-xs-12">
-            <form onSubmit={e => submitWord(e)} className="mb-3">
+            <form className="mb-3">
                 <label htmlFor="wordLength" className="form-label mt-3 white">Longueur du mot</label>
                 <input
                     value={requiredWordLength}
@@ -134,18 +146,16 @@ export default function TusmoForm (){
                     type="text"
                     className="form-control"
                     id="lettersToExclude"/>
-                <button className="bg-warning text-white mt-2 btn d-block m-auto">Montre moi</button>
             </form>
             <button onClick={resetForm} className="bg-danger text-white mt-2 btn d-block m-auto">Reset la liste</button>
 
             {showList && <>
-                {noResult ? <p>Aucun résultat</p> : (
-                    <ul>
-                        {
-                            words.map((word, index) => <li key={index}>{word}</li>)
-                        }
-                    </ul>
-                )}
+                <p>{ words.length } mot(s) trouvé(s)</p>
+                <ul>
+                    {
+                        words.map((word, index) => <li key={index}>{word}</li>)
+                    }
+                </ul>
             </>}
         </div>
     )
