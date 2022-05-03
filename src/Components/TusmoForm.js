@@ -14,7 +14,7 @@ export default function TusmoForm() {
     }, [requiredWordLength, firstLetters, lettersToContain, lettersToExclude]);
 
     const submitWord = () => {
-        const filteredWords = words.filter(wordWithAccents => {
+        const filteredWords = wordList.words.filter(wordWithAccents => {
             let word = unaccent(wordWithAccents);
             let array = [];
             if (requiredWordLength) {
@@ -33,8 +33,8 @@ export default function TusmoForm() {
             return array.every(elem => elem === true);
         });
 
-        setShowList(true);
         setWords(filteredWords);
+        setShowList(true);
     }
 
     const resetForm = () => {
@@ -118,28 +118,28 @@ export default function TusmoForm() {
     return (
         <div className="m-auto px-4 col-sm-6 col-xs-12">
             <form className="mb-3">
-                <label htmlFor="wordLength" className="form-label mt-3 white">Longueur du mot</label>
+                <label htmlFor="wordLength" className="form-label mt-3 text-primary">Longueur du mot</label>
                 <input
                     value={requiredWordLength}
                     onChange={e => onChangeWordLength(e)}
                     type="number"
                     className="form-control"
                     id="wordLength"/>
-                <label htmlFor="firstLetters" className="form-label mt-3">Début du mot</label>
+                <label htmlFor="firstLetters" className="form-label mt-3 text-primary">Début du mot</label>
                 <input
                     value={firstLetters}
                     onChange={e => onChangeFirstLetters(e)}
                     type="text"
                     className="form-control"
                     id="firstLetters"/>
-                <label htmlFor="lettersToContain" className="form-label mt-3 white">Lettres à contenir</label>
+                <label htmlFor="lettersToContain" className="form-label mt-3 text-primary">Lettres à contenir</label>
                 <input
                     value={lettersToContain}
                     onChange={e => onChangeLetterToContain(e)}
                     type="text"
                     className="form-control"
                     id="lettersToContain"/>
-                <label htmlFor="lettersToExclude" className="form-label mt-3 white">Lettres à exclure</label>
+                <label htmlFor="lettersToExclude" className="form-label mt-3 text-primary">Lettres à exclure</label>
                 <input
                     value={lettersToExclude}
                     onChange={e => onChangeLetterToExclude(e)}
@@ -147,7 +147,7 @@ export default function TusmoForm() {
                     className="form-control"
                     id="lettersToExclude"/>
             </form>
-            <button onClick={resetForm} className="bg-danger text-white mt-2 btn d-block m-auto">Reset la liste</button>
+            <button onClick={resetForm} className="bg-danger text-white mt-2 btn d-block m-auto">Nouveau mot</button>
 
             {showList && <>
                 <p>{ words.length } mot(s) trouvé(s)</p>
