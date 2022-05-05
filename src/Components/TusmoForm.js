@@ -1,5 +1,7 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import wordList from '../wordList.json';
+import {ThemeContext} from "../Context/ThemeContext";
+import ToggleButton from "./ToggleButton";
 
 export default function TusmoForm() {
     const [words, setWords] = useState(wordList.words);
@@ -8,6 +10,7 @@ export default function TusmoForm() {
     const [lettersToContain, setLettersToContain] = useState('');
     const [lettersToExclude, setLettersToExclude] = useState('');
     const [showList, setShowList] = useState(false);
+    const {darkTheme} = useContext(ThemeContext);
 
     useEffect(() => {
         hasAtLeastOneFieldFilled() && submitWord();
@@ -117,6 +120,7 @@ export default function TusmoForm() {
 
     return (
         <div className="m-auto px-4 col-sm-6 col-xs-12">
+            <ToggleButton/>
             <form className="mb-3">
                 <label htmlFor="wordLength" className="form-label mt-3 text-primary">Longueur du mot</label>
                 <input
