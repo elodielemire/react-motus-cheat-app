@@ -7,15 +7,15 @@ function App() {
 
     return (
         <div className="App">
-            <ThemeContextProvider>
+            {/*<ThemeContextProvider>*/}
                 <>
                     <h1 className="text-center text-warning">
-                        <img src={logo} style={{width: "100%"}}/>
+                        <img src={logo} style={{width: "100%"}} alt="logo"/>
                         Cheat app
                     </h1>
                     <TusmoForm />
                 </>
-            </ThemeContextProvider>
+            {/*</ThemeContextProvider>*/}
         </div>
     );
 }
