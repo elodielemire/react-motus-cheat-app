@@ -1,6 +1,6 @@
 import {createContext, useState} from "react";
 
-export const ThemeContext = createContext({});
+export const ThemeContext = createContext();
 
 const ThemeContextProvider = props => {
     const [theme, setTheme] = useState(false);
@@ -12,9 +12,9 @@ const ThemeContextProvider = props => {
     theme ? document.body.classList.add('dark-body') : document.body.classList.remove('dark-body');
 
     return (
-        <ThemeContextProvider value={{toggleTheme, theme}}>
+        <ThemeContext.Provider value={{toggleTheme, theme}}>
             {props.children}
-        </ThemeContextProvider>
+        </ThemeContext.Provider>
     )
 }
 export default ThemeContextProvider;

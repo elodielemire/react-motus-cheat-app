@@ -118,7 +118,7 @@ export default function TusmoForm() {
 
     return (
         <div className="m-auto px-4 col-sm-6 col-xs-12">
-            {/*<ToggleButton/>*/}
+            <ToggleButton/>
             <form className="mb-3">
                 <label htmlFor="wordLength" className="form-label mt-3 text-primary">Longueur du mot</label>
                 <input
